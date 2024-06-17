@@ -117,9 +117,9 @@ impl<'d, D: Driver, const N: usize, const TX_SZ: usize, const RX_SZ: usize, cons
     UdpReceive for UdpSocket<'d, D, N, TX_SZ, RX_SZ, M>
 {
     async fn receive(&mut self, buffer: &mut [u8]) -> Result<(usize, SocketAddr), Self::Error> {
-        let (len, remote_endpoint) = self.socket.recv_from(buffer).await?;
+        let (len, metadata) = self.socket.recv_from(buffer).await?;
 
-        Ok((len, to_net_socket(remote_endpoint)))
+        Ok((len, to_net_socket(metadata.endpoint)))
     }
 }
 
@@ -143,9 +143,9 @@ impl<'d, D: Driver, const N: usize, const TX_SZ: usize, const RX_SZ: usize, cons
     UdpReceive for &UdpSocket<'d, D, N, TX_SZ, RX_SZ, M>
 {
     async fn receive(&mut self, buffer: &mut [u8]) -> Result<(usize, SocketAddr), Self::Error> {
-        let (len, remote_endpoint) = self.socket.recv_from(buffer).await?;
+        let (len, metadata) = self.socket.recv_from(buffer).await?;
 
-        Ok((len, to_net_socket(remote_endpoint)))
+        Ok((len, to_net_socket(metadata.endpoint)))
     }
 }
 
